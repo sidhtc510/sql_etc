@@ -1,0 +1,176 @@
+USE hr;
+
+-- select * from employees;
+-- ----------------
+-- select count(employee_id) from employees where first_name = "steven";
+-- ----------------
+-- SELECT
+-- 	SUM(
+-- 		CASE 
+-- 		WHEN salary > 10000 THEN salary ELSE 0 
+-- 		END
+-- 	) AS "Salary Sum"
+-- FROM
+-- 	employees;
+-- ----------------
+-- SELECT
+-- 	SUM(
+-- 		CASE 
+-- 		WHEN salary > 10000 THEN salary * 0.7 ELSE salary * 0.05 
+-- 		END
+-- 	) AS "Taxes"
+-- FROM
+-- 	employees;
+
+-- SELECT
+-- 	SUM(
+-- 		CASE 
+-- 		WHEN salary > 10000 THEN salary * 0.7
+-- 		END
+-- 	) AS "Taxes 0.7",
+-- 		SUM(
+-- 		CASE 
+-- 		WHEN salary < 10000 THEN salary * 0.5
+-- 		END
+-- 	) AS "Taxes 0.5"
+-- FROM
+-- 	employees;
+
+-- ----------------
+-- найти среднюю зарплату сотрудников. для общей суммы используй SUM
+-- SELECT
+-- 	AVG(
+-- 		CASE 
+-- 		WHEN salary <= 10000 THEN salary ELSE null END
+-- 	) as "average"
+-- FROM
+-- 	employees;
+-- ----------------
+-- select first_name, last_name, salary, department_id from employees;
+-- ----------------
+-- select department_id, sum(salary) from employees group by department_id order by department_id;
+-- select department_id, min(salary), max(salary) from employees group by department_id order by department_id;
+-- ----------------
+-- is_anyone_more_10k = 1, если хотя бы один сотрудник департамента получает >= 10000, и 0, если все сотрудники департамента получают < 10000
+-- SELECT
+-- 	department_id,
+-- 	MAX(
+-- 		CASE WHEN salary >= 10000 THEN 1 ELSE 0 END
+-- 	) AS "is anyone more then 10k"
+-- FROM
+-- 	employees
+-- GROUP BY
+-- 	department_id
+-- ORDER BY
+-- 	department_id;
+-- ----------------
+--  are_everyone_more_10k сгрупировать департмент сотрудники департамента получают >= 10000, и 0, если все сотрудники департамента получают < 10000
+-- SELECT
+-- 	department_id,
+-- 	MIN(
+-- 		CASE WHEN salary >= 10000 THEN 1 ELSE 0 END
+-- 	) AS "are_everyone_more_10k"
+-- FROM
+-- 	employees
+-- GROUP BY
+-- 	department_id
+-- ORDER BY
+-- 	department_id;
+-- ----------------
+-- SELECT
+-- 	first_name,
+-- 	last_name,
+-- 	salary,
+-- 	(
+-- 		CASE WHEN salary >= 10000 THEN 1 ELSE 0 END
+-- 	) AS "More than 10k"
+-- FROM
+-- 	employees;
+--
+-- ----------------
+-- колличество людей в департаменте
+-- SELECT
+-- 	department_id,
+-- 	count(employee_id)
+-- FROM
+-- 	employees
+-- GROUP BY
+-- 	department_id;
+-- -----------------
+-- вывести список всех сотрудников из employees с колонками first_name, last_name, salary и grade
+-- grade = 0, если salary < 5000, = 1, если salary от 5000 до 10000 включительно и = 2, если salary > 10000
+-- SELECT
+-- 	first_name,
+-- 	last_name,
+-- 	salary,
+-- 	(
+-- 		CASE
+-- 			WHEN salary < 5000 THEN 0
+-- 			WHEN salary BETWEEN 5000 AND 10000 THEN 1
+-- 			WHEN salary > 1000 THEN 2
+-- 		END
+-- 	) AS "grade"
+-- FROM
+-- 	employees ;
+-- ----- continue
+-- 	select (
+-- 	case
+-- 		when salary > 10000 then 2
+-- 		when salary >= 5000 and salary <= 10000 then 1
+-- 		when salary < 5000 then 0
+--     end
+-- ) as "grade", count(employee_id) as "Count" from employees group by grade;
+-- ---------------
+-- выбрать все first_name, last_name, salary где выполняется такое условие: показывать только сотрудников с зп >= 4000
+-- НО если job_id = IT_PROG, то с зп >= 6000
+-- 1
+-- select first_name, last_name, salary, (
+-- 	case
+-- 		when job_id = "IT_PROG" then 6000 else 4000
+--     end
+-- ) as "min_salary" from employees where salary >= "min_salary";
+
+-- 2
+-- 
+-- select first_name, last_name, salary, (
+-- 	case
+-- 		when job_id = "IT_PROG" then 6000 else 4000
+--     end
+-- ) as "min_salary" from employees where salary >= (
+-- 	case
+-- 		when job_id = "IT_PROG" then 6000 else 4000
+--     end
+-- );
+ -- 3
+-- select first_name, last_name, salary from employees where salary >= (
+-- 	case
+-- 		when job_id = "IT_PROG" then 6000 else 4000
+--     end
+-- );
+
+
+-- Home Work
+-- все сотрудники жертвуют 10% от зп в фонд защиты дикой природы. Посчитать сумму всех пожертвований.
+-- все сотрудники жертвуют 10% от зп в фонд защиты дикой природы. Посчитать сумму всех пожертвований для каждого департамента.
+-- все сотрудники, зарабатывающие больше 10 000, жертвуют 10% от зп в фонд защиты дикой природы. Посчитать сумму всех пожертвований.
+-- прилетел дракон и оштрафовал всех сотрудников на 10 000 из их зарплаты. Сотрудник не может получать отрицательное число денег, поэтому если зп сотрудника < 10000, то он штрафуется на величину своей зп. Посчитать сумму всех штрафов.
+
+
+-- select sum(salary*10/100) as donations from employees;
+-- ------------
+-- select department_id, sum(salary*10/100) as donations from employees group by department_id;
+-- ------------
+-- select  sum(
+-- case
+-- when salary >= 10000 then salary*10/100
+-- end
+-- ) as donations from employees;
+-- ------------
+-- select sum(salary)-sum(
+-- case
+-- when salary > 10000 then salary-10000 else salary-salary
+-- end
+-- ) as dracon_mudak from employees;
+
+
+
