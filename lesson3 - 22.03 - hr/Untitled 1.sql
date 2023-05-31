@@ -171,6 +171,3 @@ USE hr;
 -- when salary > 10000 then salary-10000 else salary-salary
 -- end
 -- ) as dracon_mudak from employees;
-
-
-
